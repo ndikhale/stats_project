@@ -1,0 +1,87 @@
+---
+title: "test"
+author: "Nilesh Mohan Dhikale (2001224)"
+date: "10/05/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+\begin{tabular}{l|r|r|r|r}
+\hline
+  & mpg & cyl & disp & hp\\
+\hline
+  Mazda & 21.0 & 6 & 160 & 110\\
+\end{tabular}
+
+
+**G$75-Funding Agency**  
+
+	1. From the data provided it can be observed that more than 50 % of the proposals are submitted to the National Science Foundation (NSF Group).  
+	2. The high number of proposals submitted to NSF group does not guarantee that the funding agency will approve the proposal.  
+	3. We can observe from the graph that the NSF group has less approval 5 as compared to agencies such as DOE, DOD, and NASA who receive less number of   proposals as compared to NSF.  
+	4. The high number of proposals submission to a particular funding agency does not guarantee the approval success.  
+	
+**G$75-Time of Submission**  
+
+	1. The proportion of researchers who submit their submission before the deadline is more than who submit it on the deadline day.  
+	2. However, researchers who submit their proposals to the very end of deadline utilizes th complete time allocated to them to do the research. Which is   also supported by the success rate which they have.  
+	3. Researchers have more success who submit their proposal on the deadline day as compared to those who submit prior to the deadline.  
+	4. Their is risk of submitting on the last day, but success is more if you do it diligently.  
+	5. One reason of high success rate could be the pressure of submitting as well as the drive to be success in the submission they are doing.  
+	
+**G$75-Typical Week Research**  
+
+	1. The more time given by the researcher in research is significant in having high success rate to get the proposal approved.  
+	2. Researcher who are patient in their research and spend some more time in exploring stuff and come up with the appropriate conclusion for th research   have high success rate as compared to the ones who does not given more time on the research during the week.  
+	
+**G$75-H-Index**  
+
+	1. H-Index is highly associated with the academic fame and is mostly widely used measure of research productivity to decide if the research will get   the grantsmanship and be in the class of successfully funded.  
+	2. The h-index graph shows linear relationship between the success rate and the grantsmanship.  
+	3. The h-index graph explains that the higher the h-index score more the success rate of getting the grantsmanship and be in the successfully funded   class.  
+	
+**G$75-Research Style**  
+
+	1. The percentage of researchers who follow hands-off (39 %) way of research is less as compared to the researchers who follow hands-on (61 %) way of   doing the research.  
+	2. Hands-off researcher concentrate more on the research management and the document composition part which increases their success rate of getting the   grantsmanship and be in the successful funded class.  
+	3. Researchers who are more into the experimentation and analysis part of the research tend to be less successful in getting the grantsmanship.  
+	
+**G$75-Openness**  
+
+	1. Openness is a very important predictor in deciding if the researcher will be funded.  
+	2. Researchers who are more open and explore different experiences tend to shift their focus which might not be directly related to their research   which can result in less success rate.  
+	3. On the other hand, if the researcher is less open and focus more on the experiences which are directly related to their research work performs well   and eventually has high success rate of getting the grantsmanship.  
+
+**G$$-Funding Agency**  
+
+	1. The criterion for the fully funded research operation is very strict to grant funding.  
+	2. Even though the submission rate for NSF group is more than 50 %, the strictness of the criterion to grant the funding is very high and it is shown   in the result where the success rate for NSF group low as compared to other groups such as DOD, DOE, and Other.  
+	3. The submission rate to DOE group is less, however, the success  rate of acceptance of the proposal is high which depicts that the researchers spends   more time and efforts is making the quality of proposal good in order to get accepted.  
+	
+**G$$-Time of Submission**  
+
+	1. No Data Present.
+	
+**G$$-Typical Week Research**  
+
+	1. Irrespective of the strictness of the agencies to approve the research proposals, if the researcher spend more time of the week in research, the   success rate for the proposals to get accepted is high.  
+	2. This shows that more time spent on thinking about all aspects of the research will improve the quality of the proposal which will have high success   rate.  
+	3. From the graph it is made clear that success rate is more who spends more time of the week for their research.  
+
+**G$$-h-index**  
+
+	1. No data present.  
+	
+**G$$-Research Style**  
+
+	1. No data present.  
+	
+**G$$-Openness**  
+
+	1. Whatever may be the criterion of getting th grantsmanship, if the researcher is less open and focus on the tasks which are related to the research   work and does not shifts it focus on irrelevant stuff has more success rate.  
+	
