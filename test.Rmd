@@ -84,3 +84,29 @@ knitr::opts_chunk$set(echo = TRUE)
 **G$$-Openness**
 
   1. Whatever may be the criterion of getting th grantsmanship, if the researcher is less open and focus on the tasks which are related to the research work and does not shifts it focus on irrelevant stuff has more success rate.
+
+
+
+**G50$$-Number of Proposals**
+
+  1. As the number of proposals increases, the success rate for faculty decreases and then there are chances of the faculty to come into the unsuccessful class from the successful class.
+  2. From the graph of Number of Proposals, it can be observed that for the NP3 which submits 5 or more proposals per year has less success rate as compared to NP1 class which submits 1 - 2 proposals per year.
+	
+**G50$$-Typical Week research**
+
+  1. The more time given by the researcher in research is significant in having high success rate to get the proposal approved.
+  2. Researcher who are patient in their research and spend some more time in exploring stuff and come up with the appropriate conclusion for th research have high success rate as compared to the ones who does not given more time on the research during the week.
+	
+**G50$$-Extraversion**
+
+  1. Extraversion depicts that the person is talkative and energetic.
+  2. This trait can be less helpful when it comes to doing the research work.
+  3. Researchers who are extraversion may tend to have a conversation which may not be related to their research work.
+  4. The graph also depicts than the researchers who are less extraversion have high success rate of getting the grantsmanship as compared to the ones which are more extraversion.
+  5. There has been evidences that researchers who are more introvert in personality are more successful in their research.
+
+**G50$$-Agreeableness**
+
+  1. The agreeableness trait of a person shows that he / she is more collaborative with other people.
+  2. They tend to listen to the viewpoint of other people and also put their viewpoint and have a conclusion discussion which results in more productive outcomes.
+  3. This trait will help in exploring other s viewpoint related to the research and eventually helping them to provide a precise proposal which increases the success rate of getting the grantsmanship and the fining required.
