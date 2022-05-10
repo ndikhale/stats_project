@@ -1,0 +1,81 @@
+1. Number of Proposals:
+	1. As the number of proposals increases, the success rate for faculty decreases and then there are chances of the faculty to come into the unsuccessful class from the successful class.
+	2. From the graph of Number of Proposals, it can be observed that for the NP3 which submits 5 or more proposals per year has less success rate as compared to NP1 class which submits 1 - 2 proposals per year.
+	
+Figure 3
+
+1. Funding Agency $75:
+	1. From the data provided it can be observed that more than 50 % of the proposals are submitted to the National Science Foundation (NSF Group).
+	2. The high number of proposals submitted to NSF group does not gaurantee that the fuding agency will approve the proposal.
+	3. We can observe from the graph that the NSF group has less approval 5 as compared to agencies such as DOE, DOD, and NASA who receive less number of proposals as comapred to NSF.
+	4. The high number of proposals submission to a particular funding agency does not gaurantee the approval success.
+	
+2. Time of Submission $75:
+	1. The proprtion of researchers who submit their submission before the deadline is more than who submit it on the deadline day.
+	2. However, researchers who submit their proposals to the very end of deadline utilizes th complete time allocated to them to do the research. Which is also supported by the success rate which they have.
+	3. Researchers have more success who submit their proposal on the eadline day as compared to those who submit prior to the deadline.
+	4. Their is risk of submitting on the last day, but success is more if you do it diligently.
+	5. One reason of high success rate could be the pressure of submitting as well as the drive to be success in the submission they are doing.
+	
+3. Typical Week Research $75:
+	1. The more time given by the researcher in research is significant in having high success rate to get the proposal approved.
+	2. Researcher who are patient in their research and spend some more time in exploring stuff and come up with the appropriate conclusion for th research have high success rate as compared to the ones who does not given more time on the research during the week.
+	
+4. Funding Agency $$:
+	1. The criterion for the fully funded research operation is very strict to grant funding.
+	2. Even though the submission rate for NSF group is more than 50 %, the strictness of the criterion to grant the funding is very high and it is shown in the result where the success rate for NSF group low as compared to other groups such as DOD, DOE, and Other.
+	3. The submission rate to DOE group is less, however, the success  rate of acceptance of the proposal is high which depicts that the researchers spends more time and efforts is making the quality of proposal good in order to get accepted.
+	
+5. $$ Time of Submission:
+	1. No Data Present.
+	
+6. $$ Typical Week Research:
+	1. Irrespective of the strictness of the agencies to approve the research proposals, if the researcher spend more time of the week in research, the success rate for the proposals to get accepted is high.
+	2. This shows that more time spent on thinking about all aspects of the research will improve the qualiy of the porposal which will have high success rate.
+	3. From the graph it is made clear that success rate is more who spends more time of the week for their research.
+
+7. H-Index $75:
+	1. H-Index is highly associated with the academic fame and is mostly widely used measure of research productivity to decide if the research will get the grantmanship and be in the class of successully funded.
+	2. The h-index graph shows linear relationship between the success rate and the grantmanship.
+	3. The h-index graph explains that the higher the h-index score more the success rate of getting the grantmanship and be in the successfully funded class.
+	
+8. Research Style $75:
+	1. The percentage of researchers who follow hands-off (39 %) way of research is less as compared to the researchers who follow hands-on (61 %) way of doing the research.
+	2. Hands-off researcher concentrate more on the research management and the document composition part which increases their success rate of getting the grantmanship and be in the successful funded class.
+	3. Researchers who are more into the experimentation and analysis part of the research tend to be less successful in getting the grantmanship.
+	
+9. Openness $75:
+	1. Openess is a very important predictor in deciding if the researcher will be funded.
+	2. Researchers who are more open and explore different experiences tend to shift their focus which might not be directly related to their research which can result in less success rate.
+	3. On the other hand, if the researcher is less open and focus more on the experiences which are directly related to their research work performs well and eventually has high success rate of getting the grantmanship.
+
+10. G $$ h-index:
+	1. No data present.
+11. G $$ Research Style:
+	1. No data present.
+	
+12. $$ Openness:
+	1. Whatever may be the criterion of getting th grantmanship, if the researcher is less open and focus on the tasks which are related to the research work and does not shifts it focus on irrelevant stuff has more success rate.
+	
+	
+Figure 4
+
+1. Number of Proposals:
+	1. As the number of proposals increases, the success rate for faculty decreases and then there are chances of the faculty to come into the unsuccessful class from the successful class.
+	2. From the graph of Number of Proposals, it can be observed that for the NP3 which submits 5 or more proposals per year has less success rate as compared to NP1 class which submits 1 - 2 proposals per year.
+	
+2. Typical Week research:
+	1. The more time given by the researcher in research is significant in having high success rate to get the proposal approved.
+	2. Researcher who are patient in their research and spend some more time in exploring stuff and come up with the appropriate conclusion for th research have high success rate as compared to the ones who does not given more time on the research during the week.
+	
+3. Extraversion:
+	1. Extraversion depicts that the person is talkative and energetic.
+	2. Thise trait can be less helpful when it comes to doing the research work.
+	3. Researchers who are extraversion may tend to have a conversation which may not be related to their research work.
+	4. The graph also depicts than the researchers who are less extraversion have high success rate of getting the grantmanship as compared to the ones which are more extraversion.
+	5. There has been evidences that researchers who are more introvert in personality are more successful in their research.
+	
+4. Agreeablesness:
+	1. The agreeablesness trait of a person shows that he / she is more collaborative with other people.
+	2. They tend to lsiten to the viewpoint of other people and also put their viewpoint and have a conclusion dicussion which results in more productive outcomes.
+	3. This trait will help in exploring other s viewpoint related to the research and eventually helping them to provide a precise proposal which increases the success rate of getting the grantmanship and the fining required.
