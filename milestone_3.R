@@ -10,6 +10,8 @@ library(MASS)
 library(car)
 library(jtools)
 
+library(patchwork)
+
 original_data <- read.csv("C:/Users/NILESH/Documents/University/Spring 2022/Statistical_Methods_In_Research/project/milestone_3/data/KeyData.csv")
 
 model_2 <- original_data
@@ -101,24 +103,24 @@ plot_4_1 <- effect_plot(model_4, pred = FA, interval = TRUE, y.label = "S$75", c
   ggtitle("Funding Agency")
 
 color = c("gray", "cyan")
-plot_4_2 <- effect_plot(model_4, pred = T, interval = TRUE, y.label = "S$75", colors = color) + scale_x_discrete(labels= c("TS1", "TS2")) +
-  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+plot_4_2 <- effect_plot(model_4, pred = T, interval = TRUE, y.label = "S$75", colors = color) +
+  scale_x_discrete(labels= c("TS1", "TS2")) +
   theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
-  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.text = element_text(face = "bold")) + 
-  xlab("") + ylab(expression("S"^"$75")) +
+  xlab("") + ylab(expression("")) +
   ggtitle("Time of Submission")
 
 color = c("orange")
 plot_4_3 <- effect_plot(model_4, pred = TWR, interval = TRUE, y.label = "S$75", colors = color) +
-  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  #scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
   geom_vline(xintercept=mean(model_data_4$TWR), linetype="dashed", size = 1, color = "gray") +
   theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
-  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.text = element_text(face = "bold")) + 
-  xlab("") + ylab(expression("S"^"$75")) +
+  xlab("") + ylab(expression("")) +
   ggtitle("Typical Week Research")
   
 color = c("cyan")
@@ -134,23 +136,23 @@ plot_4_4 <- effect_plot(model_4, pred = H, interval = TRUE, y.label = "S$75", co
 
 color = c("gray", "cyan")
 plot_4_5 <- effect_plot(model_4, pred = RS, interval = TRUE, y.label = "S$75", colors = color) + scale_x_discrete(labels= c("RS1", "RS2")) +
-  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  #scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
   theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
-  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.text = element_text(face = "bold")) + 
-  xlab("") + ylab(expression("S"^"$75")) +
+  xlab("") + ylab(expression("")) +
   ggtitle("Research Style")
 
 color = c("cyan")
 plot_4_6 <- effect_plot(model_4, pred = O, interval = TRUE, y.label = "S$75", colors = color) +
-  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  #scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
   geom_vline(xintercept=mean(model_data_4$O), linetype="dashed", size = 1, color = "gray") +
   theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
-  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.text = element_text(face = "bold")) + 
-  xlab("") + ylab(expression("S"^"$75")) +
+  xlab("") + ylab(expression("")) +
   ggtitle("Openness")
 
 # diagram 4 / model 5 / $$
@@ -189,51 +191,50 @@ plot_5_1 <- effect_plot(model_4, pred = FA, interval = TRUE, colors = color) + s
   theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
         plot.title = element_text(hjust = 0.5),
         axis.text = element_text(face = "bold")) + 
-  xlab("") + ylab(expression("S"^"$$")) +
-  ggtitle("Funding Agency")
+  xlab("") + ylab(expression("S"^"$$"))
+  # ggtitle("Funding Agency")
 
 plot_5_2 <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1), plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
-  xlab("") + ylab(expression("")) +
-  ggtitle("Plot research")
+  xlab("") + ylab(expression(""))  #ggtitle("Plot research")
 
 color = c("red")
 plot_5_3 <- effect_plot(model_4, pred = TWR, interval = TRUE, colors = color) +
-  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
   geom_vline(xintercept=mean(model_data$TWR), linetype="dashed", size = 1, color = "gray") +
   theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
-  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.text = element_text(face = "bold")) + 
-  xlab("") + ylab(expression("S"^"$$")) +
-  ggtitle("Typical Week Research")
+  xlab("") + ylab(expression(""))  #ggtitle("Typical Week Research")
 
-plot_5_4 <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1), plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
-  xlab("") + ylab(expression("")) +
-  ggtitle("Plot research")
+
+plot_5_4 <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1)) + 
+  xlab("") + ylab(expression("S"^"$$")) + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1))
 
 plot_5_5 <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1), plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
-  xlab("") + ylab(expression("")) +
-  ggtitle("Plot research")
+  xlab("") + ylab(expression(""))  #ggtitle("Plot research")
 
 color = c("cyan")
 plot_5_6 <- effect_plot(model_4, pred = O, interval = TRUE, colors = color) +
-  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  #scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
   geom_vline(xintercept=mean(model_data$O), linetype="dashed", size = 1, color = "gray") +
   theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
-  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.text = element_text(face = "bold")) + 
-  xlab("") + ylab(expression("S"^"$$")) +
-  ggtitle("Openness")
+  xlab("") + ylab(expression(""))#ggtitle("Openness")
 
 
-figure_3_1 <- ggarrange(plot_4_1, plot_4_3, plot_4_3, plot_5_1, plot_5_2, plot_5_3, nrow = 2, ncol = 3)
-
+figure_3_1 <- ggarrange(plot_4_1, plot_4_2, plot_4_3, plot_5_1, plot_5_2, plot_5_3, nrow = 2, ncol = 3)
 figure_3_2 <- ggarrange(plot_4_4, plot_4_5, plot_4_6, plot_5_4, plot_5_5, plot_5_6, nrow = 2, ncol = 3)
+nested_figure_3 <- (figure_3_1 / plot_5_4 /figure_3_2) + plot_annotation(tag_levels = 'a')
+nested_figure_3
 
-figure_final_4 <- ggarrange(plot_6_1,plot_6_2,plot_6_3,plot_6_4,
-                            nrow = 1, ncol = 4)
+p <- plot_5_4 <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1)) + 
+  xlab("") + ylab(expression("S"^"$$")) + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1))
 
+p + annotate("text", x = 0.5, y = 23, label = "ns") +
+  annotate("text", x = 1.5, y = 30, label = "**") +
+  annotate("text", x = 2.5, y = 48, label = "***")
 
 # diagram 5 / model 6
 
@@ -310,10 +311,10 @@ plot_6_2 <- effect_plot(final_model_6, pred = TWR, interval = TRUE, colors = col
   scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
   geom_vline(xintercept=mean(model_data_6$TWR), linetype="dashed", size = 1, color = "gray") +
   theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
-  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.text = element_text(face = "bold")) + 
-  xlab("") + ylab(expression("S"^"S50$$")) +
+  xlab("") + ylab(expression("")) +
   ggtitle("Typical Week Research")
 
 color = c("cyan")
@@ -321,10 +322,10 @@ plot_6_3 <- effect_plot(final_model_6, pred = E, interval = TRUE, colors = color
   scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
   geom_vline(xintercept=mean(model_data_6$E), linetype="dashed", size = 1, color = "gray") +
   theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
-  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(), 
         plot.title = element_text(hjust = 0.5),
         axis.text = element_text(face = "bold")) + 
-  xlab("") + ylab(expression("S"^"S50$$")) +
+  xlab("") + ylab(expression("")) +
   ggtitle("Extraversion")
 
 color = c("cyan")
@@ -332,11 +333,52 @@ plot_6_4 <- effect_plot(final_model_6, pred = A, interval = TRUE, colors = color
   scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
   geom_vline(xintercept=mean(model_data_6$A), linetype="dashed", size = 1, color = "gray") +
   theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
-  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.text = element_text(face = "bold")) + 
-  xlab("") + ylab(expression("S"^"S50$$")) +
+  xlab("") + ylab(expression("")) +
   ggtitle("Aggreeableness")
 
 figure_final_4 <- ggarrange(plot_6_1,plot_6_2,plot_6_3,plot_6_4,
                             nrow = 1, ncol = 4)
+
+figure_final_4 + geom_hline(yintercept = 20)
+
+back.model_6$
+p + geom_hline(yintercept = 20)
+
+# table
+
+library(knitr)
+kable(final_model_6)
+
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+
+tab_model(final_model_6)
+
+library(stargazer)
+stargazer(final_model_6, type = "text", summary = TRUE, keep = c("coefficients"))
+
+final_model_6 %>%
+  tidy() %>%
+  kable()
+
+
+install.packages("randomForest")
+library(randomForest)
+
+diamtrain <- sample_n(model_data_6, 300)
+diamtest <- sample_n(model_data_6, 120)
+
+mydiammodel <- randomForest(condition_col ~ ., data = diamtrain)
+
+mydiammodel
+
+mytestpredictions <- predict(mydiammodel, diamtest)
+
+#Build ordinal logistic regression model
+model= polr(condition_col ~ . , data = diamtrain, Hess = TRUE)
+summary(model)
+table(diamtest$condition_col, mytestpredictions)
