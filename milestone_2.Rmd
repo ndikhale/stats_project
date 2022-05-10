@@ -1,0 +1,750 @@
+---
+title: "Project Milestone 2"
+author: "Nilesh Mohan Dhikale (2001224), Ashokkumar Madanmohan Thakur (2051207)"
+date: "01/04/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This is the Milestone 2: ANALYSIS I in the Statistical Methods in Research (COSC 6323) course.\
+The purpose of the task is to check if the gender distribution in the study sample is representative of the gender distribution in the U.S. academia and draw figures 2-4 of the manuscript and express qualitative estimates about the behaviors of the variables in each figure.
+
+
+```{r include = FALSE}
+library(dplyr)
+library(summarytools)
+library(ggplot2)
+library(ggpubr)
+library(ggnewscale)
+library(tidyr)
+library(ggdist)
+library(ggpubr)
+east = c("Connecticut", "Maryland", "Massachusetts", "New Jersey", "New York", "Pennsylvania", "Virginia", "North Carolina")
+midwest = c("Illinois", "Michigan", "Minnesota", "Ohio", "Wisconsin")
+west = c("Arizona", "California", "Colorado", "Nevada", "New Mexico", "Oregon", "Utah")
+south = c("Florida", "Georgia", "Tennessee", "Texas", "Alabama", "Oklahoma")
+
+# mapping departments to disciplinary
+nat = c("Applied Math", "Chemistry and Biochemistry", "Oceanography", "Environmental Studies", "Chemistry", "Physics", "Geosciences", "Mathematics")
+cis = c("Informatics", "Information", "Information and Logistics Technology", "Information Science", "Computer Science", "Scientific Computing")
+eng = c("Engineering / Learning Sciences", "Management", "Statistical Sciences and Operations Research", "Technology", "Engineering")
+bio = c("Health", "Health and Human Performance", "HHP", "Neurobiology", "Neuroscience", "Optometry", "Pharmacological and Pharmaceutical Sciences", "Pharmacy ", "Vision Science", "Biology", "Medicine", "Pharmacy")
+behav = c("Political Science ", "Sociology", "Psychology", "Speech, Language, and Hearing", "Political Science", "Communication Studies")
+
+# loading data from csv file
+data <- read.csv("C:/Users/NILESH/Documents/University/Spring 2022/Statistical_Methods_In_Research/project/milestone_1/reference_data/AllData.csv")
+
+disciplinary = c("NAT", "CIS", "ENG", "BIO", "BEHAV")
+geography = c("East", "Midwest", "West", "South")
+data2 = data
+
+# add two columns for regions and disciplinary
+data2$discip = NA
+data2$geog = NA
+
+# check state and department and determine the region and disciplinary category
+for(i in 1:length(data2$Department)){
+  
+  if(data2$Department[i] == "Other"){
+    dis = c(match(data2$Department_Other[i], nat), 
+            match(data2$Department_Other[i], cis),
+            match(data2$Department_Other[i], eng),
+            match(data2$Department_Other[i], bio),
+            match(data2$Department_Other[i], behav))
+    if(length(disciplinary[!is.na(dis)]) == 1){
+      data2$discip[i] = disciplinary[!is.na(dis)]
+    }
+  }else{
+    dis = c(match(data2$Department[i], nat), 
+            match(data2$Department[i], cis),
+            match(data2$Department[i], eng),
+            match(data2$Department[i], bio),
+            match(data2$Department[i], behav))
+    if(length(disciplinary[!is.na(dis)]) == 1){
+      data2$discip[i] = disciplinary[!is.na(dis)]
+    }
+  }
+  state = c(match(data2$State[i], east), 
+            match(data2$State[i], midwest),
+            match(data2$State[i], west),
+            match(data2$State[i], south))
+  if(length(geography[!is.na(state)]) == 1){
+    data2$geog[i] = geography[!is.na(state)]
+  }
+}
+
+# categorizing TWR column values to given categories for plot
+for(i in 1:length(data2$Rank)){
+  if(data2$TWR[i] <= 20){
+    data2$TWR[i] = '< 20'
+  }
+  else if(data2$TWR[i] >= 70){
+    data2$TWR[i] = '> 70'
+  }
+}
+
+
+# data processing for plotting figure s1
+ls = c(rep(names(data2)[44], 5),
+       rep(names(data2)[45], 5),
+       rep(names(data2)[46], 5),
+       rep(names(data2)[47], 5),
+       rep(names(data2)[48], 5))
+dist = c(rep(c(1:5), 5))
+
+val = c()
+
+for( i in (44:48)){
+  t = table(data2[i])
+  val = append(val, t[1])
+  val = append(val, t[2])
+  val = append(val, t[3])
+  val = append(val, t[4])
+  val = append(val, t[5])
+}
+
+test_data = c(nrow(subset(data2, Gender == 'Female')), nrow(subset(data2, Gender == 'Male')))
+gender_proportion = c(0.352, 0.648)
+
+```
+
+**Chi Squared Test**
+
+```{r echo = TRUE}
+chisq.test(test_data,p = gender_proportion)
+```
+
+**Conclusion About Chi-Squared Test**
+
+1. From the result it can be observed that gender distribution of this project represent the gender distribution in the U.S. academia.
+2. Here in the chi squared test the null hypothesis is the 2 variables are independent.
+3. In the chi squared test we are passing the sample data and the proportions of female and male count mentioned in the U.S. academia.
+4. The p-value is 0.2575 which is equal to the gender distribution in the U.S. academia.
+5. p-value of 0.2575 depicts that the 2 variables are independent of each other.
+
+\newpage
+
+**Figure 2**
+
+```{r include=FALSE}
+g_30_data_1 <- data.frame(NP = c("NP1", "NP2", "NP3"),
+                          P=c(0.5654074, 0.3110207, 0.1355145),
+                          lower_limit = c(0.4324054, 0.2058393, 0.0710681),
+                          upper_limit = c(0.6896147, 0.4401598, 0.2431078))
+
+color = c("gray", "red", "red")  
+
+g_30_data_1_plot <- ggplot(data = g_30_data_1, aes(x = NP, y= P, ymin = lower_limit, ymax = upper_limit, color = NP)) +
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+    plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) + 
+  xlab("") + ylab(expression("S"^"G30")) +
+  ggtitle("Number of Proposals")
+
+# ggplot() + 
+#   geom_pointrange(data=g_30_data_1, mapping=aes(x=NP, y=P, ymin=lower_limit, ymax=upper_limit), size=1, color="blue")
+
+g_30_data_2 <- data.frame(FA = c("NSF", "NIH", "DOE", "DOD", "NASA", "OTHER"),
+                          P = c(0.5654074, 0.5255044, 0.5649632, 0.8291301, 0.5793871, 0.854446),
+                          lower_limit = c(0.4324054, 0.3556989, 0.2894825, 0.6247132, 0.2235521, 0.6753828),
+                          upper_limit = c(0.6896147, 0.6896094, 0.805426, 0.9339707, 0.8682531, 0.9430626))
+
+fa_val = factor(g_30_data_2$FA, levels = c("NSF", "NIH", "DOE", "DOD", "NASA", "OTHER"), 
+                labels = c("NSF", "NIH", "DOE", "DOD", "NASA", "OTHER"))
+
+color = c("gray", "black", "black", "orange", "black", "orange")
+
+g_30_data_2_plot <- ggplot(data = g_30_data_2, aes(x = fa_val, y= P, ymin = lower_limit, ymax = upper_limit, color = fa_val)) +
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) + 
+  xlab("") + ylab(expression("")) +
+  ggtitle("Funding Agency")
+
+g_50_data_1 <- data.frame(NP = c("NP1", "NP2", "NP3"),
+                          P=c(0.52496689, 0.27085344, 0.09793386),
+                          lower_limit = c(0.26502507, 0.10208889, 0.02548544),
+                          upper_limit = c(0.7720483, 0.5482577, 0.3106764))
+color = c("gray", "orange", "red")  
+
+g_50_data_1_plot <- ggplot(data = g_50_data_1, aes(x = NP, y= P, ymin = lower_limit, ymax = upper_limit, color = NP)) +
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) + 
+  xlab("") + ylab(expression("S"^"G50"))
+
+g_50_data_2 <- data.frame(FA = c("NSF", "NIH", "DOE", "DOD", "NASA", "OTHER"),
+                          P = c(0.52496689, 0.44227541, 0.77745551, 0.78872828, 0.50520521, 0.83533374),
+                          lower_limit = c(0.26502507, 0.16993419, 0.41462687, 0.44355488, 0.08081971, 0.52949315),
+                          upper_limit = c(0.7720483, 0.7544019, 0.9451463, 0.9458999, 0.9222204, 0.9581018))
+
+fa_val = factor(g_50_data_2$FA, levels = c("NSF", "NIH", "DOE", "DOD", "NASA", "OTHER"), 
+                labels = c("NSF", "NIH", "DOE", "DOD", "NASA", "OTHER"))
+
+color = c("gray", "black", "black", "blue", "black", "orange")
+
+g_50_data_2_plot <- ggplot(data = g_50_data_2, aes(x = fa_val, y= P, ymin = lower_limit, ymax = upper_limit, color = fa_val)) +
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) + 
+  xlab("") + ylab(expression(""))
+
+
+# ggplot() + 
+#   geom_pointrange(data=g_50_data_2, mapping=aes(x=FA, y=P, ymin=lower_limit, ymax=upper_limit), size=1, color="blue")
+# plotCI(x = g_50_data_2$FA,
+#        y = g_50_data_2$P,
+#        li = g_50_data_2$lower_limit,
+#        ui = g_50_data_2$upper_limit)
+
+g_50_data_3 <- data.frame(BF = c("BF1", "BF2"),
+                          P = c(0.52496689, 0.70622489),
+                          lower_limit = c(0.26502507, 0.41641372),
+                          upper_limit = c(0.7720483, 0.8900989))
+
+color = c("gray", "blue")
+
+g_50_data_3_plot <- ggplot(data = g_50_data_3, aes(x = BF, y= P, ymin = lower_limit, ymax = upper_limit, color = BF)) +
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) + 
+  xlab("") + ylab(expression(""))
+
+g_50_data_4 <- data.frame(PR = c("PR1", "PR2", "PR3", "PR4", "PR5"),
+                          P = c(0.52496689, 0.21060911, 0.16086388, 0.24223295, 0.18421737),
+                          lower_limit = c(0.26502507, 0.09622479, 0.06760365, 0.12086115, 0.08418291),
+                          upper_limit = c(0.7720483, 0.4006826, 0.3363656, 0.4263762, 0.3568096))
+
+color = c("gray", "blue", "orange", "blue", "blue")
+
+g_50_data_4_plot <- ggplot(data = g_50_data_4, aes(x = PR, y= P, ymin = lower_limit, ymax = upper_limit, color = PR)) +
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) + 
+  xlab("") + ylab(expression(""))
+
+g_30_data_3_plot <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1),plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab(expression("")) + 
+  ggtitle("Break Frequency")
+
+g_30_data_4_plot <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1), plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab(expression("")) +
+  ggtitle("Plot research")
+
+
+
+figure_gg_1 = ggarrange(g_30_data_1_plot,g_30_data_2_plot,g_30_data_3_plot,g_30_data_4_plot, g_50_data_1_plot, g_50_data_2_plot, g_50_data_3_plot, g_50_data_4_plot,
+                    ncol = 4, nrow = 2)
+
+g_30_b_data_1 <- data.frame(H = c(8.216594, 29.56824, 50.91988),
+                            P = c(0.4830071, 0.5654074, 0.6443449),
+                            lower_limit = c(0.3388619, 0.4324054, 0.50235263),
+                            upper_limit = c(0.6300367, 0.6896147, 0.7647922))
+
+g_30_b_data_1_plot <- ggplot(data = g_30_b_data_1, aes(x = H, y = P)) +
+  geom_smooth() +
+  theme_classic() +
+  geom_ribbon(aes(ymin = lower_limit, ymax = upper_limit), alpha = 0.2) +
+  geom_vline(xintercept = 29.56824, size = 1, color = "gray", linetype = "dashed") +
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) +
+  xlab("") + ylab(expression("S"^"G30")) +
+  ggtitle("h-index")
+
+g_30_c_data_1 <- data.frame(DS = c("DS1", "DS2"),
+                            P = c(0.5654074, 0.3903778),
+                            lower_limit = c(0.4324054, 0.292617),
+                            upper_limit = c(0.6896147, 0.4978148))
+
+color = c("gray", "orange")
+
+g_30_c_data_1_plot <- ggplot(data = g_30_c_data_1, aes(x = DS, y= P, ymin = lower_limit, ymax = upper_limit, color = DS)) +
+  geom_pointrange() + 
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + 
+  theme(legend.position="none") + scale_color_manual(values=  color) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),  axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) + 
+  xlab("") + ylab(("")) +
+  ggtitle("Deadline Stress")
+
+g_30_c_data_2 <- data.frame(TA = c(41.33747, 31.00396, 51.67098),
+                            P = c(0.5654074, 0.6404668, 0.4872238),
+                            lower_limit = c(0.4324054, 0.50600269, 0.33436504),
+                            upper_limit = c(0.6896147, 0.7559809, 0.6425102))
+
+g_30_c_data_2_plot <- ggplot(data = g_30_c_data_2, aes(x = TA, y = P)) +
+  geom_smooth() +
+  theme_classic() +
+  geom_ribbon(aes(ymin = lower_limit, ymax = upper_limit), alpha = 0.2) +
+  geom_vline(xintercept = 41.33747, size = 1, color = "gray", linetype = "dashed") +
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),  axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) +
+  xlab("") + ylab(("")) +
+  ggtitle("Trait Anxiety")
+
+g_30_c_data_3_plot <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1),plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab(("")) +
+  ggtitle("Extraversion")
+
+
+g_30_c_data_4_plot <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1),plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab(("")) +
+  ggtitle("Avoidance coping")
+
+
+g_50_b_data_1 <- data.frame(H = c(8.216594, 29.56824, 50.91988),
+                            P = c(0.42084094, 0.52496689, 0.6269662),
+                            lower_limit = c(0.18240246, 0.26502507, 0.34903612),
+                            upper_limit = c(0.7029761, 0.7720483, 0.8404696))
+
+g_50_b_data_1_plot <- ggplot(data = g_50_b_data_1, aes(x = H, y = P)) +
+  geom_smooth() +
+  theme_classic() +
+  geom_ribbon(aes(ymin = lower_limit, ymax = upper_limit), alpha = 0.2) +
+  geom_vline(xintercept = 29.56824, size = 1, color = "gray", linetype = "dashed") +
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) +
+  xlab("") + ylab(expression("S"^"G50"))
+
+g_50_c_data_1_plot <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1),plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab((""))
+
+
+g_50_c_data_2_plot <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1),plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab((""))
+  
+
+g_50_c_data_3 <- data.frame(EX = c(3.746199, 5.957816, 8.169434),
+                            P = c(0.6524133, 0.52496689, 0.394183),
+                            lower_limit = c(0.36343523, 0.26502507, 0.17000459),
+                            upper_limit = c(0.8605437, 0.7720483, 0.6739421))
+
+g_50_c_data_3_plot <- ggplot(data = g_50_c_data_3, aes(x = EX, y = P)) +
+  geom_smooth() +
+  theme_classic() +
+  geom_ribbon(aes(ymin = lower_limit, ymax = upper_limit), alpha = 0.2) +
+  geom_vline(xintercept = 5.957816, size = 1, color = "gray", linetype = "dashed") +
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) +
+  xlab("") + ylab((""))
+
+g_50_c_data_4 <- data.frame(AV = c(13.63931, 18.81638, 23.99344),
+                            P = c(0.432716, 0.52496689, 0.6155447), 
+                            lower_limit = c(0.20134603, 0.26502507, 0.31787407),
+                            upper_limit = c(0.6976951, 0.7720483, 0.8461761))
+
+g_50_c_data_4_plot <- ggplot(data = g_50_c_data_4, aes(x = AV, y = P)) +
+  geom_smooth() +
+  theme_classic() +
+  geom_ribbon(aes(ymin = lower_limit, ymax = upper_limit), alpha = 0.2) +
+  geom_vline(xintercept = 18.81638, size = 1, color = "gray", linetype = "dashed") +
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text = element_text(face = "bold")) +
+  xlab("") + ylab((""))
+
+figure_gg_2 = ggarrange(g_30_b_data_1_plot,g_30_c_data_1_plot,g_30_c_data_2_plot,g_30_c_data_3_plot, g_30_c_data_4_plot, g_50_b_data_1_plot, g_50_c_data_1_plot, g_50_c_data_2_plot, g_50_c_data_3_plot, g_50_c_data_4_plot,
+                        ncol = 5, nrow = 2)
+
+final_figure_2 <- ggarrange(figure_gg_1, figure_gg_2, ncol = 1, nrow = 2)
+
+#final_figure2 <- ggarrange(figure1, figure2, figure3, nrow = 2)
+
+```
+
+```{r echo=FALSE, fig.width=14, fig.height=10, fig.align='center'}
+
+final_figure_2
+```
+
+**Conclusion about figure 2**
+
+1. G 30 Number of proposals:
+    1. NP1 (1-2 proposals per year), NP2 (3-4 proposals per year), and NP3 (5 or more proposals
+per year).
+    2. From the definitions of the number of proposals it can be observed that as the count of the proposals per year increases the success rate decreases.
+    
+2. G 30 Funding Agency:
+    1. We know that the US funding agencies are highly competitive.
+    2. From the graph we can observe that the proposals which were submitted to DOD and Other agencies have higher success rate as compared to the remaining agencies which are NSF, NIH, DOE and NASA.
+    3. Agencies NSF, NIH, DOE, and NASA have around same success rate.
+    4. Confidence interval for NASA shows that the chances of success is more compared with remaining agencies.
+    
+3. Break Frequency and Plot Research:
+    1. No data is present for Break Frequency and Plot research.
+    
+4. G 50 Number of Proposals:
+    1. From the definitions of the number of proposals for G 50 it can be observed that as the count of the proposals per increases the success rate decreases.
+    
+5. G 50 Funding Agency:
+    1.From the graph we can observe that the proposals submitted to DOE, DOD and Other agencies have higher success rate as compared to NSF, NIH and NASA agencies.
+    
+6. G 50 Break Frequency:
+    1. From the graph of we can observe that researches who frequently takes break every 1 - 2 hour has less success rate as compared to the researchers who takes break every 3 - 4 or longer hour.
+  
+7. G 50 Plot research:
+    1. From the graph of plot research it can be observed that the researchers who gave less than a month for a pilot project has high success rate as compared to researchers who tend to spend more time on the pilot project.
+    2. Though the others success rate is less that PR1, PR4 (6-12 months) has better chances of getting the grantmanship than other pilot research types.
+    
+8. G 30 h-index:
+    1. The h-index graph shows linear relationship between the success rate and the grantmanship.
+    2. Higher the h-index means higher the chances of getting a grant.
+    
+9. G 30 Deadline Stress:
+    1. having more stress than the regular day does not help in getting grant.
+    2. The researchers who have similar or less stress than the regular day intend to perform better and have higher success rate.
+    
+10. G 30 Trait Anxiety:
+    1. Higher Trait Anxiety leads to lower work performance.
+    2. As the Trait Anxiety increase the success rate of the researchers decreases.
+    
+11. G 30 Extraversion:
+    1. No data present.
+
+12. G 30 Avoidance coping:
+    1. No data present.
+
+13. G 50 h-index:
+    1. The h-index graph shows linear relationship between the success rate and the grantmanship.
+    2. Higher the h-index means higher the chances of getting a grant.
+
+14. G 50 Deadline Stress:
+    1. No data present.
+
+15. G 50 Trait Anxiety:
+    1. No data present.
+    
+16. Extraversion:
+    1. From the graph it can be observed that the less extrovert the researcher is the more success rate he achieves in getting the grantmanship.
+
+17. G 50 Avoidance coping:
+    1. It is observed that the individuals who practice to avoid stress has better success rate than the one who deal with them.
+
+**Final observation about Figure 2**
+
+1. Most of the predictors are performing same for success rate of getting the grantmanship of 30 % (G30) and of 50 % (G50). 
+2. In case of US funding agencies success rate o getting funding from agencies is more in G50 (50 % or more).
+3. The mean success rate of number of proposals for G30 and G50 are similar but the the one standard deviation above the mean of number of proposals in G50 increases the chance of success by almost 2 times than the one standard deviation above the mean of G30 number of proposals.
+4. The personality traits such as extraversion, openness, aggreeableness, etc impact the success rate irrespective of the funding type.
+
+
+\newpage
+
+**Figure 3**
+```{r include=FALSE}
+table_75 <- read.csv("C:/Users/NILESH/Documents/University/Spring 2022/Statistical_Methods_In_Research/project/milestone_2/data/table-75.csv")
+table_dollar <- read.csv("C:/Users/NILESH/Documents/University/Spring 2022/Statistical_Methods_In_Research/project/milestone_2/data/table_dollar.csv")
+
+head(table_75)
+unique(table_75)
+colnames(table_75)[1] = "FA"
+colnames(table_dollar)[1] = "FA"
+
+# ggplot(table_75, aes(FA, Prediction)) +        # ggplot2 plot with confidence intervals
+#   geom_point() +
+#   geom_errorbar(aes(ymin = Lower_limit, ymax = Upper_limit))
+# 
+# l <- factor(table_75$FA[1:6])
+# length(l[1][2])
+# 
+
+FA_75 <- table_75[match(unique(table_75$FA), table_75$FA),]
+
+FA_val <- factor(FA_75$FA, levels = c("NSF ", "NIH ", "DoE ", "DoD ", "NASA ", "Other "), 
+                 labels = c("NSF", "NIH", "DOE", "DOD", "NASA", "OT")) 
+color = c("gray", "black", "blue", "orange", "black", "black")  
+
+f1 <- ggplot(FA_75, aes(x = FA_val, y= Prediction, ymin = Lower_limit, ymax = Upper_limit, color = FA_val)) +        # ggplot2 plot with confidence intervals
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + theme(legend.position="none") + scale_color_manual(values=  color) + 
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), 
+        plot.title = element_text(hjust = 0.5)) + 
+  xlab("") + ylab(expression("S"^"$75")) + ggtitle("Funding Agency")
+
+
+TWR_df <- table_75[match(unique(table_75$TWR), table_75$TWR),]
+
+f2 <- ggplot(TWR_df, aes(x = TWR, y = Prediction)) +
+  geom_smooth() + theme_classic() + geom_ribbon(aes(ymin = Lower_limit, ymax = Upper_limit), alpha = 0.2) + 
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  geom_vline(xintercept=mean(TWR_df$TWR), linetype="dashed", size = 1, color = "gray") +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(), 
+        plot.title = element_text(hjust = 0.5)) +
+  xlab("") + ylab("") + ggtitle("Typical Week Reserch")
+
+
+t.first <- table_75[match(unique(table_75$T), table_75$T),]
+
+f3 <- ggplot(t.first, aes(x = T, y= Prediction, ymin = Lower_limit, ymax = Upper_limit, color = T)) +        # ggplot2 plot with confidence intervals
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + xlim("TS1", "TS2") + theme(legend.position="none") +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank(), 
+        plot.title = element_text(hjust = 0.5)) +
+  xlab("") + ylab("") + ggtitle("Time of Submission")
+
+
+
+
+# $$$
+dollar_plot <- table_dollar[match(unique(table_dollar$FA), table_dollar$FA),]
+FA_val <- factor(dollar_plot$FA, levels = c("NSF ", "NIH ", "DoE ", "DoD ", "NASA ", "Other "), 
+                 labels = c("NSF", "NIH", "DOE", "DOD", "NASA", "OT")) 
+color = c("gray", "black", "black", "red", "black", "black")
+f4 <- ggplot(dollar_plot, aes(x = FA_val, y= Prediction, ymin = Lower_limit, ymax = Upper_limit, color = FA_val)) +        # ggplot2 plot with confidence intervals
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + theme(legend.position="none") +scale_color_manual(values = color) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1)) +
+  xlab("") + ylab(expression("S"^"$$")) 
+
+
+dollar_twr <- table_dollar[match(unique(table_dollar$TWR), table_dollar$TWR),]
+
+f5 <- ggplot(dollar_twr, aes(x = TWR, y = Prediction)) +
+  geom_smooth() + theme_classic() + geom_ribbon(aes(ymin = Lower_limit, ymax = Upper_limit), alpha = 0.2) + 
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  geom_vline(xintercept=mean(dollar_twr$TWR), linetype="dashed", size = 1, color = "gray") +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank()) +
+  xlab("") + ylab("")
+
+f6 <- ggplot() + theme_classic() + theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank()) + 
+  xlab("") + ylab("")
+
+figure1 = ggarrange(f1,f3,f2,f4,f6, f5, 
+                    ncol = 3, nrow = 2)
+
+
+#plot 2
+#table_75
+h_index <- table_75[match(unique(table_75$H), table_75$H),]
+fig7 <- ggplot(h_index, aes(x = H, y = Prediction)) +
+  geom_smooth() + theme_classic() + geom_ribbon(aes(ymin = Lower_limit, ymax = Upper_limit), alpha = 0.2) + 
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  geom_vline(xintercept=mean(h_index$H), linetype="dashed", size = 1, color = "gray") + 
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), 
+        plot.title = element_text(hjust = 0.5)) + 
+  xlab("") + ylab(expression("S"^"$75")) + ggtitle("h-index")
+
+
+
+rs <- table_75[match(unique(table_75$RS), table_75$RS), ]
+color = c("gray", "blue")
+fig8 <- ggplot(rs, aes(x = RS, y= Prediction, ymin = Lower_limit, ymax = Upper_limit, color = color)) +        # ggplot2 plot with confidence intervals
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + theme(legend.position="none") +scale_color_manual(values = color) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), 
+        plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab(expression("")) + ggtitle("Research Style")
+
+
+open <- table_75[match(unique(table_75$OP), table_75$OP), ]
+fig9 <- ggplot(open, aes(x = OP, y = Prediction)) +
+  geom_smooth() + theme_classic() + geom_ribbon(aes(ymin = Lower_limit, ymax = Upper_limit), alpha = 0.2) + 
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  geom_vline(xintercept=mean(h_index$OP), linetype="dashed", size = 1, color = "gray") + 
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), 
+        plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab(expression("")) + ggtitle("Openness")
+
+
+#  ggplot(open, aes(x = OP, y = Prediction, ymin = Lower_limit, ymax = Upper_limit)) + geom_lineribbon() 
+
+
+dollar_op <- table_dollar[match(unique(table_dollar$OP), table_dollar$OP), ]
+fig10 <- ggplot(dollar_op, aes(x = OP, y = Prediction)) +
+  geom_smooth() + theme_classic() + geom_ribbon(aes(ymin = Lower_limit, ymax = Upper_limit), alpha = 0.2) + 
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  geom_vline(xintercept=mean(dollar_op$OP), linetype="dashed", size = 1, color = "gray") + 
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank()) + 
+  xlab("") + ylab(expression(""))
+
+fig7_1 <- ggplot() + theme_classic() +theme(panel.border = element_rect(color = "black", fill = NA, size = 1)) + 
+  xlab("") + ylab(expression("S"^"$$")) + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1))
+fig8_1 <- ggplot() + theme_classic() + theme(panel.border = element_rect(color = "black", fill = NA, size = 1), axis.text.y = element_blank()) + 
+  xlab("") + ylab("") 
+
+figure2 <- ggarrange(fig7, fig8, fig9, fig7_1, fig8_1,fig10, ncol = 3, nrow = 2)
+
+#figure3 <- ggarrange(fig9, fig10, nrow = 2, ncol = 1)
+
+#figure4 <- ggarrange(figure2, figure3, ncol = 2, nrow = 1)
+
+final_figure <- ggarrange(figure1, figure2, ncol = 1, nrow = 2)
+
+#final_figure2 <- ggarrange(figure1, figure2, figure3, nrow = 2)
+final_figure
+
+
+```
+
+
+```{r echo=FALSE, fig.width=14, fig.height=10, fig.align='center'}
+final_figure
+```
+
+
+**Conclusion about Figure 3**
+
+1. G $ 75 Funding Agency:
+    1. From the graph we can conclude that the success rate of getting the funding is more than 75 % when submitted to DOE and DOD.
+    
+2. G $ 75 Time of Submission:
+    1. TS1 (submission done of deadline day) has more success than submission day before deadline day.
+    
+3. G $ 75 Typical Week Research:
+    1. More time spent on research during the typical week produces more success rate.
+    
+4. G \$$ Funding Agency:
+    1. Submission done to DOD has more success compared to other remaining agencies.
+    2. NSH has less success rate of granting full funding.
+    
+5. G \$$ Time of Submission:
+    1. No Data Present.
+    
+6. G \$$ Typical Week Research.
+    1. More time spent on research during the typical week produces more success rate.
+    
+7. G $ 75 h-index:
+    1. Higher the h-index means higher the chances of getting a grant.
+    
+8. G $ 75 Research Style:
+    1. Researcher who are involved in experiments have less success of getting funding of atleast 75 % as compared to researchers who are more involved in research management and document composition.
+    
+9. G $ 75 Openness:
+    1. The researcher who have high level of openness have less success rate as compared to the researchers who are less open. 
+    
+10. G \$$ h-index:
+    1. No data present.
+    
+11. G \$$ Research Style:
+    1. No data present.
+    
+12. G \$$ Openness:
+    1. The researcher who have high level of openness have less success rate as compared to the researchers who are less open.
+    
+**Final Observation about Figure 3**
+
+1. The success chance for one standard deviation above of the openness value remain similar for G75 while for full funding the one standard deviation above value decreases with the openness.
+2. One standard deviation above the mean value of of getting full funding from the agency  is nearly 1.5 times of its mean.
+3. Similar to figure 2, the personality traits impact the success rate irrespective of the funding type.
+
+\newpage
+
+**Figure 4**
+
+```{r include=FALSE}
+
+g_50_dd_data_1 <- data.frame(NP = c("NP1", "NP2", "NP3"),
+                             P = c(0.102912834, 0.019457297, 0.008962645),
+                             lower_limit = c(0.060248977, 0.006866873, 0.001887798),
+                             upper_limit = c(0.1703128, 0.05387989, 0.04145059))
+
+g_50_dd_color = c("gray", "orange", "orange")
+g_50_dd_data_1_plot <- ggplot(data = g_50_dd_data_1, aes(x = NP, y= P, ymin = lower_limit, ymax = upper_limit, color = NP)) +        # ggplot2 plot with confidence intervals
+  geom_pointrange() + scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme_classic() + theme(legend.position="none", panel.border = element_rect(color = "black", fill = NA, size = 1)) + 
+  xlab("") + ylab(expression("S"^"S50$$")) + ggtitle("Number of Proposals") +scale_color_manual(values = g_50_dd_color) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), 
+        plot.title = element_text(hjust = 0.5))
+
+
+
+g_50_dd_data_2 <- data.frame(TWR = c(26.27698, 42.08437, 57.89175),
+                             P = c(0.05781917, 0.102912834, 0.17658405), 
+                             lower_limit = c(0.02727433, 0.060248977, 0.101209682),
+                             upper_limit = c(0.11840753, 0.1703128, 0.28998154))
+
+g_50_dd_data_2_plot <- ggplot(data = g_50_dd_data_2, aes(x = TWR, y = P)) +
+  geom_smooth() +
+  theme_classic() +
+  geom_ribbon(aes(ymin = lower_limit, ymax = upper_limit), alpha = 0.2) +
+  geom_vline(xintercept = 42.08437, size = 1, color = "gray", linetype = "dashed") +
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), 
+        plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab(expression("")) + ggtitle("Typical Week Research") 
+
+
+g_50_dd_data_3 <- data.frame(EX = c(3.746199, 5.957816, 8.169434),
+                             P = c(0.17145386, 0.102912834, 0.0597946),
+                             lower_limit = c(0.099248721, 0.060248977, 0.02619334),
+                             upper_limit = c(0.27986798, 0.1703128, 0.13071423))
+
+g_50_dd_data_3_plot <- ggplot(data = g_50_dd_data_3, aes(x = EX, y = P)) +
+  geom_smooth() +
+  theme_classic() +
+  geom_ribbon(aes(ymin = lower_limit, ymax = upper_limit), alpha = 0.2) +
+  geom_vline(xintercept = 5.957816, size = 1, color = "gray", linetype = "dashed") +
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) +
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), 
+        plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab(expression("")) + ggtitle("Extraversion") 
+
+g_50_dd_data_4 <- data.frame(AGR = c(5.871032, 7.528536, 9.18604),
+                             P = c(0.06500685, 0.102912834, 0.15915954),
+                             lower_limit = c(0.028504191, 0.060248977, 0.092027925),
+                             upper_limit = c(0.14144896, 0.1703128, 0.26117545))
+
+g_50_dd_data_4_plot <- ggplot(data = g_50_dd_data_4, aes(x = AGR, y = P)) +
+  geom_smooth() +
+  theme_classic() +
+  geom_ribbon(aes(ymin = lower_limit, ymax = upper_limit), alpha = 0.2) +
+  geom_vline(xintercept = 7.528536, size = 1, color = "gray", linetype = "dotted") +
+  scale_y_continuous(breaks = seq(0, 1, .25), labels = scales::percent, limits = c(0,1)) + 
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 1), 
+        plot.title = element_text(hjust = 0.5), axis.text.y = element_blank()) + 
+  xlab("") + ylab(expression("")) + ggtitle("Agreeableness") 
+
+
+figure_final_4 <- ggarrange(g_50_dd_data_1_plot,g_50_dd_data_2_plot,g_50_dd_data_3_plot,g_50_dd_data_4_plot,
+                            nrow = 1, ncol = 4)
+
+
+```
+
+```{r echo=FALSE, fig.width=14, fig.height=10, fig.align='center'}
+figure_final_4
+```
+
+**Conclusion about Figure 4**
+
+1. G 50\$$ Number of Proposals:
+    1. From the definitions of the number of proposals it can be observed that as the count of the proposals per year increases the success rate decreases.
+
+2. G 50\$$ Typical Week Research:  
+    1.More time spent on research during the typical week produces more success rate.
+
+3. G 50\$$ Extraversion:
+    1. From the graph it can be observed that the less extrovert the researcher is the more success rate he achieves in getting the grantmanship.
+    
+4. G 50\$$ Agreeableness:
+    1. Agreeableness is one of the Big-Five personality traits.
+    2. Researchers are more collaborative if they are high in agreeableness.
+    3. Success rate of researchers increases with increase in the agreeableness level.
